@@ -1,4 +1,4 @@
-name: create-pages-site-legacy
+name: create-pages-site
 
 on:
   workflow_dispatch:
