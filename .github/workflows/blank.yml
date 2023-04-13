@@ -1,0 +1,56 @@
+name: create-pages-site-legacy
+
+on:
+  workflow_dispatch:
+
+jobs:
+  generate:
+    name: Generate on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+    permissions:
+      contents: write
+      pages: write
+    concurrency:
+      group: ${{ github.ref }}
+      cancel-in-progress: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Generate Content
+        run: |
+          # mkdir
+          mkdir -p dist/gh-pages
+          # 
+          echo "Test" > dist/gh-pages/test.txt
+      - name: Create Github Pages
+        uses: actions/github-script@v6
+        with:
+          script: |
+            try {
+              await github.rest.repos.getPages({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+              });
+            } catch (error) {
+              if (error.status === 404) {
+                await github.rest.repos.createPagesSite({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  build_type: "legacy",
+                  source: {
+                    branch: "gh-pages",
+                    path: "/",
+                  },
+                });
+              } else {
+                throw error;
+              }
+            }
+      - name: Deploy Github Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: dist/gh-pages
+          branch: gh-pages
