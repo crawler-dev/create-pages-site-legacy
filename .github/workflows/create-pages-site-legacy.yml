@@ -11,9 +11,19 @@ jobs:
       matrix:
         os: [ubuntu-latest]
     permissions:
+      actions: write
+      checks: write
       contents: write
-      pages: write
       deployments: write
+      id-token: write
+      issues: write
+      discussions: write
+      packages: write
+      pages: write
+      pull-requests: write
+      repository-projects: write
+      security-events: write
+      statuses: write
     concurrency:
       group: ${{ github.ref }}
       cancel-in-progress: true
