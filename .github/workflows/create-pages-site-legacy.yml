@@ -13,7 +13,7 @@ jobs:
     permissions:
       contents: write
       pages: write
-      repository-projects: write
+      deployments: write
     concurrency:
       group: ${{ github.ref }}
       cancel-in-progress: true
